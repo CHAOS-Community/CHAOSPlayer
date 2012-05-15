@@ -1,5 +1,6 @@
 #CHAOS Player
-This is a PHP Portal API Client. It enables easy communication with a CHAOS Portal API (protocol version 4).
+This a a player for the CHAOS Portal API.  
+To be update soon...
 
 ##Requirements
 CHAOS [Portal JavaScript](https://github.com/CHAOS-Community/CHAOS.Portal.Client-JavaScript) client.
@@ -11,7 +12,7 @@ The source code is located in the *src* folder.
 The examples are located in the *examples* folder.  
 
 ##Reporting problems
-If you encounter any problems using this project, please report them using the "(Issues)[https://github.com/CHAOS-Community/CHAOSPlayer/issues]" section of the projects Github page.
+If you encounter any problems using this project, please report them using the "[Issues](https://github.com/CHAOS-Community/CHAOSPlayer/issues)" section of the projects Github page.
 
 ##Links
 [Official CHAOS Community website](http://www.chaos-community.org/)  
