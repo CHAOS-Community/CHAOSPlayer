@@ -3,9 +3,59 @@
 	<html>
 	<head>
 		<title>CHAOS Player Basic Example</title>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../lib/CHAOS.Portal.Client.PortalClient.js"></script>
+		<script type="text/javascript">
+			var servicePath = "http://api.chaos-systems.com";
+			
+			$(document).ready(function(event)
+			{
+				$("form").submit(function(event)
+				{
+					event.preventDefault();
+					
+					var email = $(this).find("input[name=Email]").val();
+					var password = $(this).find("input[name=Password]").val();
+					var objectGUID = $(this).find("input[name=ObjectGUID]").val();
+					
+					$(this).hide();
+					
+					var parameters = "servicePath=" + servicePath + "&objectGUID=" + objectGUID;
+					
+					if(email && password)
+					{
+						var client = new PortalClient(servicePath, "11DF0F8F-F746-4310-BA5A-DB86E7BF7AEB");
+						client.SessionAcquired().Add(function(data)
+						{
+							client.EmailPassword_Login(null, email, password);
+						});
+						
+						client.SessionAuthenticated().Add(function(data)
+						{
+							parameters += "&sessionGUID=" + client.SessionGUID();
+							AddPlayer(parameters);
+						});
+					}
+					else
+						AddPlayer(parameters);
+				})
+			});
+				
+			function AddPlayer(parameters)
+			{
+				$("body").append('<iframe width="1280" height="720" scrolling="no" src="../src/CHAOSPlayer.html#' + parameters + '" frameborder="0"></iframe>');
+			}
+		</script>
 	</head>
 	<body>
 		<h1>CHAOS Player Basic Example</h1>
-		<iframe width="1280" height="720" scrolling="no" src="../src/CHAOSPlayer.html#objectGUID=8bcdba56-bd51-480e-83d0-48b0094c6688" frameborder="0"></iframe>
+		<form action="">
+			Email: <input name="Email" type="text" /><br/>
+			Password: <input name="Password" type="password" /><br/>
+			ObjectGUID: <input name="ObjectGUID" type="text" /><br/>
+			<input type="submit" />
+			<br/>
+			Login is optional.
+		</form>
 	</body>
 </html>
