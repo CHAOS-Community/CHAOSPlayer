@@ -16,10 +16,11 @@
 					var email = $(this).find("input[name=Email]").val();
 					var password = $(this).find("input[name=Password]").val();
 					var objectGUID = $(this).find("input[name=ObjectGUID]").val();
+					var accessPointGUID = $(this).find("input[name=AccessPointGUID]").val();
 					
 					$(this).hide();
 					
-					var parameters = "servicePath=" + servicePath + "&objectGUID=" + objectGUID;
+					var parameters = "servicePath=" + servicePath + "&objectGUID=" + objectGUID + (accessPointGUID == "" ? "" : "&accessPointGUID=" + accessPointGUID);
 					
 					if(email && password)
 					{
@@ -50,14 +51,16 @@
 		<h1>CHAOS Player Basic Example</h1>
 		<form action="">
 			Service path: <input name="ServicePath" type="text" /><br/>
-			ObjectGUID: <input name="ObjectGUID" type="text" /><br/>
+			Object GUID: <input name="ObjectGUID" type="text" /><br/>
+			<hr/>
+			AccessPoint GUID: <input name="AccessPointGUID" type="text" /><br/>
 			<hr/>
 			Email: <input name="Email" type="text" /><br/>
 			Password: <input name="Password" type="password" /><br/>
 			<hr/>
 			<input type="submit" />
 			<br/>
-			Login is optional.
+			AccessPoint GUID or login should be filled out.
 		</form>
 	</body>
 </html>

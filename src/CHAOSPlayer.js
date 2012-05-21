@@ -25,7 +25,7 @@
 
 		client.SessionAcquired().Add(function ()
 		{
-			client.Object_GetByObjectGUID(ClientGetObjectByGUIDCallback, settings.objectGUID, false, true, false);
+			client.Object_GetByObjectGUID(ClientGetObjectByGUIDCallback, settings.objectGUID, settings.accessPointGUID , false, true, false);
 		});
 		
 		if(sessionGUIDSet)
