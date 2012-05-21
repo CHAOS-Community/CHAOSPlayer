@@ -70,11 +70,11 @@
 	{
 		if(videoPath == null || !documentIsReady)
 			return;
-
+		
 		jwplayer("PlayerContainer").setup({
 			flashplayer: "../lib/jwplayer/player.swf",
-			file: videoPath,
-			image: thumbPath,
+			file: videoPath.replace(new RegExp("\\\\", "g"), "/"),
+			image: thumbPath.replace(new RegExp("\\\\", "g"), "/"),
 			height: "100%",
 			width: "100%"
 		});

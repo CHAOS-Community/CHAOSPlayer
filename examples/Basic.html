@@ -6,14 +6,13 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script type="text/javascript" src="../lib/CHAOS.Portal.Client.PortalClient.js"></script>
 		<script type="text/javascript">
-			var servicePath = "http://api.chaos-systems.com";
-			
 			$(document).ready(function(event)
 			{
 				$("form").submit(function(event)
 				{
 					event.preventDefault();
 					
+					var servicePath = $(this).find("input[name=ServicePath]").val();
 					var email = $(this).find("input[name=Email]").val();
 					var password = $(this).find("input[name=Password]").val();
 					var objectGUID = $(this).find("input[name=ObjectGUID]").val();
@@ -50,9 +49,12 @@
 	<body>
 		<h1>CHAOS Player Basic Example</h1>
 		<form action="">
+			Service path: <input name="ServicePath" type="text" /><br/>
+			ObjectGUID: <input name="ObjectGUID" type="text" /><br/>
+			<hr/>
 			Email: <input name="Email" type="text" /><br/>
 			Password: <input name="Password" type="password" /><br/>
-			ObjectGUID: <input name="ObjectGUID" type="text" /><br/>
+			<hr/>
 			<input type="submit" />
 			<br/>
 			Login is optional.
