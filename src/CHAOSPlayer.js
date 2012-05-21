@@ -71,15 +71,18 @@
 		}
 	}
 	
-	function GetBestVideoFile(file1, file2, onlyHTTP)
+	function GetBestVideoFile(file1, file2, httpFile)
 	{
-		if(onlyHTTP)
+		if(httpFile && file2.Token == "HTTP Download")
 		{
-			if(file2.Token == "HTTP Download")
+			if(file1 == null || file2.URL.indexOf(".mp4") != -1)
 				return file2;
 		}
-		else if(file1 == null || (file1.Token != "RTMP Streaming" && file2.Token == "RTMP Streaming") || file2.URL.indexOf(".mp4") != -1)
-			return file2;
+		else if(!httpFile && file2.Token == "RTMP Streaming")
+		{
+			if(file1 == null || file2.URL.indexOf(".mp4") != -1)
+				return file2;
+		}
 		
 		return file1;
 	}
