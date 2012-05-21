@@ -3,8 +3,10 @@
 	var clientGUID = "DCC822C8-AFD9-4E8C-90BE-06962111A398";
 
 	var documentIsReady = false;
-	var videoPath = null;
-	var thumbPath = null;
+	var objectParsed = false;
+	var rtmpVideoFile = null;
+	var httpVideoFile = null;
+	var thumbnailFile = null;
 	var client = null;
 
 	var settings = $.deparam.fragment();
@@ -47,14 +49,17 @@
 					switch(object.Files[i].FormatType)
 					{
 						case "Video":
-							videoPath = object.Files[i].URL;
+							httpVideoFile = GetBestVideoFile(httpVideoFile, object.Files[i], true);
+							rtmpVideoFile = GetBestVideoFile(rtmpVideoFile, object.Files[i], false);
 							break;
 						case "Image":
-							thumbPath = object.Files[i].URL;
+							if(thumbnailFile == null)
+								thumbnailFile = object.Files[i];
 							break;
 					}
 				}
 
+				objectParsed = true;
 				AddPlayer();
 			}
 			else
@@ -65,16 +70,58 @@
 			ReportError("Service error: " + (serviceResult.WasSuccess() ? serviceResult.MCM().Error() : serviceResult.Error()));
 		}
 	}
+	
+	function GetBestVideoFile(file1, file2, onlyHTTP)
+	{
+		if(onlyHTTP)
+		{
+			if(file2.Token == "HTTP Download")
+				return file2;
+		}
+		else if(file1 == null || (file1.Token != "RTMP Streaming" && file2.Token == "RTMP Streaming") || file2.URL.indexOf(".mp4") != -1)
+			return file2;
+		
+		return file1;
+	}
 
 	function AddPlayer()
 	{
-		if(videoPath == null || !documentIsReady)
+		if(!objectParsed || !documentIsReady)
 			return;
 		
+		var modes = [];
+		var flashMode = { type: "flash", src: "../lib/jwplayer/player.swf"};
+
+		modes.push(flashMode);
+		
+		if(rtmpVideoFile != null)
+		{
+			var path = rtmpVideoFile.URL.replace(new RegExp("\\\\", "g"), "/"); //TODO: This should not be necessary, server side bug.
+			path = path.replace(new RegExp("//", "g"), "/"); //TODO: This should not be necessary, server side bug.
+			path = path.replace(new RegExp("rtmp:/", "g"), "rtmp://"); //TODO: Find a better solution
+			
+			if(path.indexOf(".flv") != -1)
+				path = path.replace("mp4:", ""); //TODO: This should not be necessary, server side bug.
+			
+			var pathData = new RegExp("^(rtmp://.+?/.+?)/(.+)$", "").exec(path);
+			
+			flashMode.config = {
+								file: pathData[2],
+								streamer: pathData[1],
+								provider: "rtmp"
+								};
+		}
+		else
+		{
+			flashMode.config = { file: httpVideoFile.URL.replace(new RegExp("\\\\", "g"), "/") };
+		}
+
+		if(httpVideoFile != null)
+			modes.push({ type: "html5", config: { file: httpVideoFile.URL.replace(new RegExp("\\\\", "g"), "/") }});
+		
 		jwplayer("PlayerContainer").setup({
-			flashplayer: "../lib/jwplayer/player.swf",
-			file: videoPath.replace(new RegExp("\\\\", "g"), "/"),
-			image: thumbPath.replace(new RegExp("\\\\", "g"), "/"),
+			modes: modes,
+			image: thumbnailFile.URL.replace(new RegExp("\\\\", "g"), "/"),
 			height: "100%",
 			width: "100%"
 		});
