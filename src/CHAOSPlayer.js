@@ -134,7 +134,7 @@
 	
 	function PlayerPlay()
 	{
-		if(haveReportedPlay || !settings.repositoryIdentifier)
+		if(haveReportedPlay || typeof settings.repositoryIdentifier == "undefined")
 			return;
 		haveReportedPlay = true;
 		
