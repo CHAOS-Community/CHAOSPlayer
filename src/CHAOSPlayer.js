@@ -4,6 +4,7 @@
 
 	var documentIsReady = false;
 	var objectParsed = false;
+	var haveReportedPlay = false;
 	var rtmpVideoFile = null;
 	var httpVideoFile = null;
 	var thumbnailFile = null;
@@ -101,7 +102,7 @@
 		{
 			var path = rtmpVideoFile.URL.replace(new RegExp("\\\\", "g"), "/"); //TODO: This should not be necessary, server side bug.
 			path = path.replace(new RegExp("//", "g"), "/"); //TODO: This should not be necessary, server side bug.
-			path = path.replace(new RegExp("rtmp:/", "g"), "rtmp://"); //TODO: Find a better solution
+			path = path.replace(new RegExp("rtmp:/", "g"), "rtmp://");
 			
 			if(path.indexOf(".flv") != -1)
 				path = path.replace("mp4:", ""); //TODO: This should not be necessary, server side bug.
@@ -125,9 +126,19 @@
 		jwplayer("PlayerContainer").setup({
 			modes: modes,
 			image: thumbnailFile.URL.replace(new RegExp("\\\\", "g"), "/"),
+			events: { onPlay: PlayerPlay },
 			height: "100%",
 			width: "100%"
 		});
+	}
+	
+	function PlayerPlay()
+	{
+		if(haveReportedPlay || !settings.repositoryIdentifier)
+			return;
+		haveReportedPlay = true;
+		
+		client.StatsObject_Set(settings.repositoryIdentifier, settings.objectGUID, settings.objectTypeID, settings.objectCollectionID, settings.channelIdentifier, settings.channelTypeID, settings.eventTypeID, settings.objectTitle, null, null, null, 0)
 	}
 
 	function ReportError(message)
