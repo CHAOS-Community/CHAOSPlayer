@@ -22,8 +22,6 @@
 					
 					var parameters = "servicePath=" + servicePath + "&objectGUID=" + objectGUID + (accessPointGUID == "" ? "" : "&accessPointGUID=" + accessPointGUID);
 					
-					parameters += "&repositoryIdentifier=DKA&objectTypeID=3&objectCollectionID=3&channelIdentifier=2&channelTypeID=2&eventTypeID=3";
-					
 					if(email && password)
 					{
 						var client = new PortalClient(servicePath, "11DF0F8F-F746-4310-BA5A-DB86E7BF7AEB");
