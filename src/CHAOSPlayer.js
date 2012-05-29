@@ -138,7 +138,7 @@
 			return;
 		haveReportedPlay = true;
 		
-		client.StatsObject_Set(null, settings.repositoryIdentifier, settings.objectGUID, settings.objectTypeID, settings.objectCollectionID, settings.channelIdentifier, settings.channelTypeID, settings.eventTypeID, settings.objectTitle, null, null, null, 0);
+		client.StatsObject_Set(null, settings.repositoryIdentifier, settings.objectGUID, settings.objectTypeID, settings.objectCollectionID, settings.channelIdentifier, settings.channelTypeID, settings.eventTypeID, settings.objectTitle, "", "", "", 0);
 	}
 
 	function ReportError(message)
