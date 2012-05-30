@@ -122,17 +122,30 @@
 
 		if(httpVideoFile != null)
 			modes.push({ type: "html5", config: { file: httpVideoFile.URL.replace(new RegExp("\\\\", "g"), "/") }});
-		
-		jwplayer("PlayerContainer").setup({
+
+		jwplayer.utils.log = function(msg, obj)
+		{
+			if (typeof console != "undefined" && typeof console.log != "undefined")
+			{
+				if (obj) 
+					console.log(msg, obj);
+				else 
+					console.log(msg);
+			}
+			if (msg == "No suitable players found")
+				ShowRequiresFlash();
+		};
+
+		jwplayer("Player").setup({
 			modes: modes,
 			image: thumbnailFile.URL.replace(new RegExp("\\\\", "g"), "/"),
-			events: { onPlay: PlayerPlay },
+			events: { onPlay: PlayerPlay, onError: PlayerError },
 			height: "100%",
 			width: "100%"
 		});
 	}
 	
-	function PlayerPlay()
+	function PlayerPlay(oldstate)
 	{
 		if(haveReportedPlay || typeof settings.repositoryIdentifier == "undefined")
 			return;
@@ -140,9 +153,22 @@
 		
 		client.StatsObject_Set(null, settings.repositoryIdentifier, settings.objectGUID, settings.objectTypeID, settings.objectCollectionID, settings.channelIdentifier, settings.channelTypeID, settings.eventTypeID, settings.objectTitle, "", "", "", 0);
 	}
+	
+	function PlayerError(message)
+	{
+		ReportError(message);
+	}
 
 	function ReportError(message)
 	{
-		$("#PlayerContainer").text(message);
+		$(".PlayerContainer").hide();
+		$(".ErrorContainer").show();
+		$(".ErrorMessage").text(message.message);
+	}
+	
+	function ShowRequiresFlash()
+	{
+		$(".PlayerContainer").hide();
+		$(".FlashRequiredContainer").show();
 	}
 })();

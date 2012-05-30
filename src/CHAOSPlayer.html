@@ -17,7 +17,7 @@
 				height: 100%;
 			}
 	
-			#PlayerContainer
+			.PlayerContainer, #Player
 			{
 				width: 100%;
 				height: 100%;
@@ -25,6 +25,21 @@
 		</style>
 	</head>
 	<body>
-		<div id="PlayerContainer">Loading Portal Player</div>
+		<div class="PlayerContainer">
+			<div id="Player">Loading Portal Player</div>
+		</div>
+		<noscript>
+			<h3>Oops</h3>
+			<p>Javascript is required to view this content.</p>
+		</noscript>
+		<div class="ErrorContainer" style="display: none">
+			<h3>Oops</h3>
+			<p>An error occurred:</p>
+			<p class="ErrorMessage"></p>
+		</div>
+		<div class="FlashRequiredContainer" style="display: none">
+			<h3>Oops</h3>
+			<p>This content requires Adobe Flash Player, get it free <a href="http://get.adobe.com/flashplayer/" target="_blank">here</a>.</p>
+		</div>
 	</body>
 </html>
