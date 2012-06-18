@@ -60,8 +60,13 @@
 					}
 				}
 
-				objectParsed = true;
-				AddPlayer();
+				if(httpVideoFile == null && rtmpVideoFile == null)
+					ReportError("No video found on object");
+				else
+				{
+					objectParsed = true;
+					AddPlayer();
+				}
 			}
 			else
 				ReportError("Object not found");
@@ -115,7 +120,7 @@
 								provider: "rtmp"
 								};
 		}
-		else
+		else if(httpVideoFile != null)
 		{
 			flashMode.config = { file: httpVideoFile.URL.replace(new RegExp("\\\\", "g"), "/") };
 		}
@@ -163,7 +168,7 @@
 	{
 		$(".PlayerContainer").hide();
 		$(".ErrorContainer").show();
-		$(".ErrorMessage").text(message.message);
+		$(".ErrorMessage").text(typeof message.message == "undefined" ? message : message.message);
 	}
 	
 	function ShowRequiresFlash()
