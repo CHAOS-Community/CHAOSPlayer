@@ -54,8 +54,7 @@
 							rtmpVideoFile = GetBestVideoFile(rtmpVideoFile, object.Files[i], false);
 							break;
 						case "Image":
-							if(thumbnailFile == null)
-								thumbnailFile = object.Files[i];
+							thumbnailFile = GetBestThumbnail(thumbnailFile, object.Files[i])
 							break;
 					}
 				}
@@ -77,20 +76,28 @@
 		}
 	}
 	
-	function GetBestVideoFile(file1, file2, httpFile)
+	function GetBestVideoFile(currentCandidate, newCandidate, findHTTPFile)
 	{
-		if(httpFile && file2.Token == "HTTP Download")
+		if(findHTTPFile && newCandidate.Token == "HTTP Download")
 		{
-			if(file1 == null || file2.URL.indexOf(".mp4") != -1)
-				return file2;
+			if(currentCandidate == null || newCandidate.URL.indexOf(".mp4") != -1)
+				return newCandidate;
 		}
-		else if(!httpFile && file2.Token == "RTMP Streaming")
+		else if(!findHTTPFile && newCandidate.Token == "RTMP Streaming")
 		{
-			if(file1 == null || file2.URL.indexOf(".mp4") != -1)
-				return file2;
+			if(currentCandidate == null || newCandidate.URL.indexOf(".mp4") != -1)
+				return newCandidate;
 		}
 		
-		return file1;
+		return currentCandidate;
+	}
+
+	function GetBestThumbnail(currentCandidate, newCandidate)
+	{
+		return currentCandidate == null ||
+			newCandidate.FormatCategory.toLocaleLowerCase() == "thumbnail" ||
+			(currentCandidate.FormatCategory.toLocaleLowerCase() != "thumbnail" && newCandidate.FormatCategory.toLocaleLowerCase().indexOf("thumbnail") != -1)
+			? newCandidate : currentCandidate;
 	}
 
 	function AddPlayer()
@@ -141,13 +148,17 @@
 				ShowRequiresFlash();
 		};
 
-		jwplayer("Player").setup({
+		var options = {
 			modes: modes,
-			image: thumbnailFile.URL.replace(new RegExp("\\\\", "g"), "/"),
 			events: { onPlay: PlayerPlay, onError: PlayerError },
 			height: "100%",
 			width: "100%"
-		});
+		};
+
+		if(thumbnailFile != null)
+		options.image = thumbnailFile.URL.replace(new RegExp("\\\\", "g"), "/");
+
+		jwplayer("Player").setup(options);
 	}
 	
 	function PlayerPlay(oldstate)
