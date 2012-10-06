@@ -156,7 +156,7 @@
 		};
 
 		if(thumbnailFile != null)
-		options.image = thumbnailFile.URL.replace(new RegExp("\\\\", "g"), "/");
+			options.image = thumbnailFile.URL.replace(new RegExp("\\\\", "g"), "/");
 
 		jwplayer("Player").setup(options);
 	}
